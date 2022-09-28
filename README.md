@@ -4,7 +4,12 @@ This repo contains a mix of SQL queries that were found [on this repo](https://g
 
 **Import Note**: All queries are provided as is and should only be used if you know what you're doing. Running some of these can be resource intensive on your Mattermost server, so it's suggested run these during low traffic periods.
 
-## Contents:
+# Contents:
+
+**[System Console Metrics](#system-console-metrics)**
+- [Active Users](#active-users)
+
+**[General Queries](#general-queries)**
 
 - [Find Empty Teams](#find-empty-teams)
 - [Get All Deactivated Users](#get-all-deactivated-users)
@@ -16,6 +21,32 @@ This repo contains a mix of SQL queries that were found [on this repo](https://g
 - [Get Users in Teams](#get-users-in-teams)
 - [Channel Growth](#channel-growth)
 - [Running Count of New Users](#running-count-of-new-users)
+
+
+
+# System Console Metrics
+
+These is a growing list of the queries used to populate the Site Statistics and Team Statistic within the System Console.
+
+## Active Users
+
+Active users shows the number of users who have been **activated** within Mattermost, and removes all users who have been deactivated. This is decided by the `deleteAt` flag on the `users` table. 
+
+### PostgreSQL
+
+```sql
+select 
+    count(distinct u.id) 
+from 
+    users as u
+left join 
+    bots ON u.id = bots.userid
+where 
+    u.deleteat = 0 
+    and bots.userid IS NULL;
+```
+
+# General Queries
 
 ## Channel Growth
 
