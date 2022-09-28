@@ -6,16 +6,16 @@ This repo contains a mix of SQL queries that were found [on this repo](https://g
 
 ## Contents:
 
-- **[Find Empty Teams](#find-empty-teams)** -
-- **[Get All Deactivated Users](#get-all-deactivated-users)
-- **[Get Last Login Time of Users](#get-last-login-time)
-- **[Get Number of Posts in Channels](#get-number-of-posts-in-channel)
-- **[Get Posts by Team and Channel](#get-posts-by-team-and-channel
-- **[Get User Last Activity](#get-user-last-activity)
-- **[Get Users in Channels](#get-users-in-channels)
-- **[Get Users in Teams](#get-users-in-teams)
-- **[Channel Growth](#channel-growth)
-- **[Running Count of New Users](#running-count-of-new-users)
+- [Find Empty Teams](#find-empty-teams)** -
+- [Get All Deactivated Users](#get-all-deactivated-users)
+- [Get Last Login Time of Users](#get-last-login-time)
+- [Get Number of Posts in Channels](#get-number-of-posts-in-channel)
+- [Get Posts by Team and Channel](#get-posts-by-team-and-channel)
+- [Get User Last Activity](#get-user-last-activity)
+- [Get Users in Channels](#get-users-in-channels)
+- [Get Users in Teams](#get-users-in-teams)
+- [Channel Growth](#channel-growth)
+- [Running Count of New Users](#running-count-of-new-users)
 
 ## Channel Growth
 
