@@ -200,7 +200,7 @@ This query retrieves a list of all users and their last session activity at date
 
 **Important Note:** If the time that the the user was last active at exceeded the configured session length in days, or the user has never logged in, the LastActivityAt field will be null.
 
-
+If you want to only search for users who are activated but have no session activity add `and lastActivityAt IS NULL` to your `WHERE` clause.
 ### Postgres
 
 ```sql
@@ -217,7 +217,7 @@ LEFT JOIN
 LEFT JOIN 
     bots ON users.id = bots.userid
 WHERE 
-     bots.userid IS NULL;
+     bots.userid IS NULL
 ORDER BY
     lastActivityAt desc;
 ```
