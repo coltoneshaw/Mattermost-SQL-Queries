@@ -156,6 +156,7 @@ ON
 
 ## Get Number Of Posts In Channel
 This query retrieves the total number of posts in the database for Public ('O') and Private ('P') channels. This includes posts that are marked as deleted or edited so the number will be larger than the total number of posts visible to users in Mattermost.
+
 ### MySQL
 
 ```sql
@@ -195,7 +196,9 @@ ORDER BY
 
 ## Get User Last Activity
 
-This query retrieves a list of all users and their last session activity at date and time. Important Note: If the time that the the user was last active at exceeded the configured session length in days, or the user has never logged in, the LastActivityAt field will be null.
+This query retrieves a list of all users and their last session activity at date and time. 
+
+**Important Note:** If the time that the the user was last active at exceeded the configured session length in days, or the user has never logged in, the LastActivityAt field will be null.
 
 
 ### Postgres
@@ -211,6 +214,10 @@ FROM
     users
 LEFT JOIN
     sessions ON sessions.userid = users.id
+LEFT JOIN 
+    bots ON users.id = bots.userid
+WHERE 
+     bots.userid IS NULL;
 ORDER BY
     lastActivityAt desc;
 ```
@@ -228,6 +235,10 @@ FROM
     mattermost.Users
 LEFT JOIN
     mattermost.Sessions ON Sessions.UserId = Users.Id
+LEFT JOIN
+    mattermost.Bots on Users.Id = Bots.UserId
+WHERE
+    Bots.UserId IS NULL
 ORDER BY
 	LastActivityAt desc;
 ```
