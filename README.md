@@ -6,7 +6,7 @@ This repo contains a mix of SQL queries that were found [on this repo](https://g
 
 ## Contents:
 
-- [Find Empty Teams](#find-empty-teams)** -
+- [Find Empty Teams](#find-empty-teams)
 - [Get All Deactivated Users](#get-all-deactivated-users)
 - [Get Last Login Time of Users](#get-last-login-time)
 - [Get Number of Posts in Channels](#get-number-of-posts-in-channel)
