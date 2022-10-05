@@ -21,6 +21,7 @@ This repo contains a mix of SQL queries that were found [on this repo](https://g
 - [Get Users in Teams](#get-users-in-teams)
 - [Channel Growth](#channel-growth)
 - [Running Count of New Users](#running-count-of-new-users)
+- [User Activity with Sessions, Posts, and Logins](#user-activity-with-sessions-posts-and-logins)
 
 
 
@@ -341,3 +342,77 @@ JOIN (
     ) r
 ORDER BY t.time; 
 ```
+
+## User Activity With Sessions, Posts, and Logins
+
+This query will merge together the sessions, users, audits, and posts table. It can be a heavy query on your system because it's using the post table. Consider doing this on off-hours. 
+
+Use this query if you're interested in finding the activity of users, what kind of user they are, and the total number of posts they have in all of your Mattermost history.
+
+Notes:
+
+- `lastactivityat` might be null, this means the user doesn't have an active session. This could be because they logged out or sessions were purged.
+- `lastLoginDate` might also be null for various reasons.
+
+### Example Output:
+
+|username |firstname|lastname  |lastactivityat|last_login_date|totalposts|roles                   |
+|---------|---------|----------|--------------|---------------|----------|------------------------|
+|billy    |         |          |2022-10-05    |2022-10-05     |2         |system_guest            |
+|professor|Hubert   |Farnsworth|2022-10-05    |2022-09-29     |124       |system_user system_admin|
+
+
+### Postgres
+
+```sql
+SELECT
+    users.username,
+    users.firstname,
+    users.lastname,
+    to_timestamp(cast(sessions.lastactivityat/1000 as bigint))::date as lastActivityAt,
+    to_timestamp(cast(lastlogin.LastLogin/1000 as bigint))::date as lastLoginDate,
+    p.totalPosts,
+    users.roles
+FROM
+    users
+LEFT JOIN
+    sessions ON sessions.userid = users.id
+LEFT JOIN 
+    bots ON users.id = bots.userid
+INNER JOIN
+	(
+	SELECT 
+		count(posts.id) as totalPosts, 
+		posts.userid 
+	FROM 
+		posts 
+	GROUP BY 
+		posts.userid
+	) as p on p.userid = users.id 
+INNER JOIN
+   (
+   	SELECT 
+   		userid, 
+   		MAX(createat) as lastLogin 
+	FROM 
+	   audits 
+	WHERE 
+	   audits.action = '/api/v4/users/login' 
+	   AND audits.extrainfo LIKE 'success%' 
+	GROUP BY 
+	   userid) as lastlogin ON users.id = lastlogin.userid;
+WHERE 
+     bots.userid IS NULL
+     and users.deleteat = 0
+GROUP BY
+	users.username,
+	users.firstname,
+	users.lastname,
+	lastActivityAt,
+	users.roles,
+	p.totalPosts
+ORDER BY
+    lastActivityAt desc;
+```
+
+
