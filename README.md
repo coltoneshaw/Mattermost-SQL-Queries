@@ -22,6 +22,7 @@ This repo contains a mix of SQL queries that were found [on this repo](https://g
 - [Channel Growth](#channel-growth)
 - [Running Count of New Users](#running-count-of-new-users)
 - [User Activity with Sessions, Posts, and Logins](#user-activity-with-sessions-posts-and-logins)
+- [Posts From User Within Timestamp including Audience](#Posts-from-user-within-timestamp-including-audience
 
 
 
@@ -415,4 +416,43 @@ ORDER BY
     lastActivityAt desc;
 ```
 
+## Posts from user within timestamp including audience
 
+This query is designed to allow you to find posts by a specific user and the audience that has current view access to them. This does not look at the `channelmemberhistory` table, so if someone has left the channel they would not be included.
+
+### Example Output
+
+|postdate|teamname                     |channelname|message                                      |channelmembers                                              |
+|--------|-----------------------------|-----------|---------------------------------------------|------------------------------------------------------------|
+|2023-04-03 14:57:50|test                         |new-hires  |Excited to have you here!                    |colton, haley, tom                                          |
+|2023-04-03 14:50:52|test                         |sev-1-systems-outage|@here - Who can help us troubleshoot this?   |colton, tom, haley                                          |
+|2023-04-03 14:50:01|test                         |sev-1-systems-outage|@here - Who can help us troubleshoot this?   |colton, tom, haley                                          |
+|2023-03-31 13:52:09|test                         |off-topic  |Hey @channel, I'll be late for our meeting today!|haley, testperson1711, hermes, tom, testperson1698          |
+|2023-03-31 13:45:50|test                         |off-topic  |@channel                                     |testperson21, testperson1783, testperson1171, testperson1421|
+
+
+### Postgres
+
+```sql
+select 
+	to_timestamp(CAST(posts.createat/1000 AS BIGINT))::TIMESTAMP AS postDate,
+	teams.name as teamname,
+	channels.name AS channelname,
+	posts.message,
+	string_agg(users.username, ', ') AS channelMembers
+FROM
+	channelmembers
+JOIN channels ON channelmembers.channelid = channels.id
+JOIN users ON users.id = channelmembers.userid
+JOIN posts ON posts.channelid = channels.id
+JOIN teams on channels.teamid = teams.id
+WHERE 
+  posts.userid = 'gywaej6kctbotgt8psohpfjtwa' 
+  and posts.createat BETWEEN '1680269826992' AND '1680533947146'
+GROUP BY
+	posts.id,
+	channels.id,
+	teams.name
+ORDER BY
+	postDate desc;
+```
