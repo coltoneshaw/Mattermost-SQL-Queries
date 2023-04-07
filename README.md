@@ -1,4 +1,4 @@
-# Mattermost Scripts
+# Mattermost SQL Queries
 
 This repo contains a mix of SQL queries that were found [on this repo](https://github.com/cvitter/mattermost-scripts), work directly with customers, and other modes.
 
