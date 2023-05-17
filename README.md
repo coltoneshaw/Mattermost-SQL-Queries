@@ -54,6 +54,8 @@ left join
 
 Monthly active users show the number of users who have interacted with Mattermost within the last month (31 days). 
 
+Replace the `MonthlyMillisecond` with the current time in milli minus 31 days (`2678400000`).
+
 ### PostgreSQL
 
 ```sql
@@ -68,6 +70,7 @@ LEFT JOIN
 WHERE 
     Users.deleteat = 0 
     and Bots.UserId IS NULL;
+    AND s.LastActivityAt > MonthlyMillisecond
 ```
 
 
