@@ -52,7 +52,7 @@ left join
 
 ## Monthly Active Users
 
-Monthly active users show the number of users who have interacted with Mattermost within the last month (31 days). 
+Monthly active users show the number of users who have interacted with Mattermost within the last month (31 days). The `status` table is what drives the online / offline indicator within Mattermost. So, any conditions that would change the status there would update this table.
 
 Replace the `MonthlyMillisecond` with the current time in milli minus 31 days (`2678400000`).
 
