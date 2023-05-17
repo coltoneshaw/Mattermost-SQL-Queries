@@ -22,7 +22,8 @@ This repo contains a mix of SQL queries that were found [on this repo](https://g
 - [Channel Growth](#channel-growth)
 - [Running Count of New Users](#running-count-of-new-users)
 - [User Activity with Sessions, Posts, and Logins](#user-activity-with-sessions-posts-and-logins)
-- [Posts From User Within Timestamp including Audience](#Posts-from-user-within-timestamp-including-audience
+- [Posts From User Within Timestamp including Audience](#posts-from-user-within-timestamp-including-audience)
+
 
 
 
