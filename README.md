@@ -8,6 +8,8 @@ This repo contains a mix of SQL queries that were found [on this repo](https://g
 
 **[System Console Metrics](#system-console-metrics)**
 - [Active Users](#active-users)
+- [Monthly Active Users](#monthly-active-users)
+
 
 **[General Queries](#general-queries)**
 
@@ -44,10 +46,30 @@ from
     users as u
 left join 
     bots ON u.id = bots.userid
-where 
-    u.deleteat = 0 
-    and bots.userid IS NULL;
+
 ```
+
+
+## Monthly Active Users
+
+Monthly active users show the number of users who have interacted with Mattermost within the last month (31 days). 
+
+### PostgreSQL
+
+```sql
+SELECT 
+    count(*)
+FROM 
+    status as s
+LEFT JOIN 
+    Bots ON s.UserId = Bots.UserId
+LEFT JOIN
+    Users ON s.UserId = Users.Id
+WHERE 
+    Users.deleteat = 0 
+    and Bots.UserId IS NULL;
+```
+
 
 # General Queries
 
