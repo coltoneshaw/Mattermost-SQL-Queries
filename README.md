@@ -482,3 +482,67 @@ GROUP BY
 ORDER BY
 	postDate desc;
 ```
+
+## Direct Messages between two users
+
+This query is used to track down messages between 2 specific users during a given timeframe.  As with previous examples on this page, the `createat` field will contain
+an epoch time in milliseconds.  [This website](https://www.epochconverter.com) can be used to help you figure out the values for specific dates and timezones.
+
+```sql
+select * from posts 
+where channelid in
+(select id from channels 
+where position((select id from users where username='<user1>') in name) > 0
+and position((select id from users where username='<user2>') in name) > 0)
+and createat >= 1685577600000
+and createat <= 1693526399000;
+```
+
+## Get all messages for a user
+
+This query returns all posts for a specific user in both public and private channels, including DMs.  Again, the timeframe can be specified using Epoch milliseconds.
+
+```sql
+WITH UserSearch AS (
+  SELECT '<username>' AS search_username
+),
+TimezoneSetting AS (
+  SELECT 'UTC' AS timezone
+)
+
+SELECT
+  u.username,
+  to_timestamp(p.createat / 1000) AT TIME ZONE (SELECT timezone FROM TimezoneSetting) as posttimestamp,
+  CASE
+    WHEN c.Type = 'D' THEN (
+      SELECT u2.username
+      FROM users u2, UserSearch us
+      WHERE (u2.id = SPLIT_PART(c.name, '__', 1) OR u2.id = SPLIT_PART(c.name, '__', 2))
+      AND u2.username = us.search_username
+      LIMIT 1
+    )
+    ELSE c.name
+  END as channel_or_dm_name,
+  CASE
+    WHEN p.deleteat != 0 THEN 'Edited Or Deleted'
+    ELSE NULL
+  END as IsThePostDeletedOrEdited,
+  p.message,
+  fi.path
+FROM
+  posts p
+JOIN
+  users u ON u.id = p.userid
+JOIN
+  channels c ON p.channelid = c.id
+LEFT JOIN
+  fileinfo fi ON p.id = fi.postid,
+  UserSearch us,
+  TimezoneSetting ts
+WHERE
+  p.createat >= 1685577600000
+  AND p.createat <= 1693526399000
+  AND u.username = us.search_username
+ORDER BY
+  p.createat ASC;
+```
