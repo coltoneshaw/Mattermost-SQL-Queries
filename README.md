@@ -27,6 +27,7 @@ This repo contains a mix of SQL queries that were found [on this repo](https://g
 - [Posts From User Within Timestamp including Audience](#posts-from-user-within-timestamp-including-audience)
 - [Posts grouped by DM, GM and Channels in last 30 days](#posts-grouped-by-dm-gm-and-channels-in-the-last-30-days)
 - [Posts per user per channel in the last 30 days](#posts-per-user-per-channel-in-the-last-30-days)
+- [Word count within all posts per channel per team](#word-count-within-all-posts-per-channel-per-team)
 
 # System Console Metrics
 
