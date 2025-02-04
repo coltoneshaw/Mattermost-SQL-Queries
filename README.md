@@ -556,3 +556,32 @@ where p.createat > ((extract(epoch from current_timestamp) * 1000) - (cast(1000 
 group by p.userid, p.channelid, u.username, u.firstname, u.lastname, c."name", c.displayname, c."type"
 order by u.username;
 ```
+
+## Word count within all posts per channel per team
+
+This query is used to gather a count of words used in each channel across all teams.
+
+### PostgreSQL
+
+```sql
+SELECT
+    t.DisplayName AS Team,
+    c.DisplayName AS Channel,
+    c.Type,
+    COUNT(p.id) AS Posts,
+    COALESCE(SUM(array_length(string_to_array(p.message, ' '), 1)), 0) AS WordCount
+FROM
+    channels c
+JOIN
+    teams t ON c.TeamId = t.Id
+LEFT JOIN
+    posts p ON p.ChannelId = c.Id AND p.DeleteAt = 0
+WHERE
+    c.DeleteAt = 0
+    AND c.Type IN ('O', 'P')
+    AND t.DeleteAt = 0
+GROUP BY
+    t.DisplayName, c.DisplayName, c.Type
+ORDER BY
+    Team, Channel;
+```
