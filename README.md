@@ -134,11 +134,11 @@ This query retrieves all deactivated users in Mattermost.
 
 ```sql
 SELECT
-   COUNT (*)
+   COUNT(*)
 FROM
    Users
 WHERE
-   DeleteAt = 0;
+   DeleteAt != 0;
 ```
 
 ## Get Last Login Time
