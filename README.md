@@ -30,6 +30,7 @@ This repo contains a mix of SQL queries that were found [on this repo](https://g
 - [Word count within all posts per channel per team](#word-count-within-all-posts-per-channel-per-team)
 - [Direct Messages between two users](#direct-messages-between-two-users)
 - [Get all messages for a user](#get-all-messages-for-a-user)
+- Disk space usage from all databases
 
 # System Console Metrics
 
