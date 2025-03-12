@@ -30,6 +30,7 @@ This repo contains a mix of SQL queries that were found [on this repo](https://g
 - [Word count within all posts per channel per team](#word-count-within-all-posts-per-channel-per-team)
 - [Direct Messages between two users](#direct-messages-between-two-users)
 - [Get all messages for a user](#get-all-messages-for-a-user)
+- [Disk space usage from all databases](#disk-space-usage-from-all-databases)
 
 # System Console Metrics
 
@@ -651,4 +652,22 @@ GROUP BY
     t.DisplayName, c.DisplayName, c.Type
 ORDER BY
     Team, Channel;
+```
+
+## Disk space usage from all databases
+
+This query will get the disk space used by all databases in your MySQL instance in MB.
+
+### MySQL
+
+```sql
+SELECT
+    table_schema AS database_name,
+    ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS size_mb
+FROM
+    information_schema.tables
+GROUP BY
+    table_schema
+ORDER BY
+    size_mb DESC;
 ```
